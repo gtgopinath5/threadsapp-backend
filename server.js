@@ -29,6 +29,7 @@ cloudinary.config({
 app.use(cors({
 	origin: ["https://threadsapp-frontend.vercel.app"],
 	credentials: true,
+	optionsSuccessStatus: 200 
 }));
 
 // Middlewares
