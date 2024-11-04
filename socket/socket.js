@@ -8,7 +8,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
 	cors: {
-		origin: "threadsapp-frontend.vercel.app",
+		origin: "https://threadsapp-frontend.vercel.app",
 		methods: ["GET", "POST"],
 	},
 });
