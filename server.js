@@ -1,5 +1,6 @@
-import path from "path";
+import cors from "cors";
 import express from "express";
+import path from "path";
 import dotenv from "dotenv";
 import connectDB from "./db/connectDb.js";
 import cookieParser from "cookie-parser";
@@ -11,22 +12,28 @@ import { app, server } from "./socket/socket.js";
 import job from "./cron/cron.js";
 
 dotenv.config();
-
 connectDB();
 job.start();
 
 const PORT = process.env.PORT || 5000;
 const __dirname = path.resolve();
 
+// Cloudinary config
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
 	api_key: process.env.CLOUDINARY_API_KEY,
 	api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// Add CORS middleware for Express
+app.use(cors({
+	origin: ["https://threadsapp-frontend.vercel.app"],
+	credentials: true,
+}));
+
 // Middlewares
-app.use(express.json({ limit: "50mb" })); // To parse JSON data in the req.body
-app.use(express.urlencoded({ extended: true })); // To parse form data in the req.body
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Routes
@@ -34,12 +41,9 @@ app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/messages", messageRoutes);
 
-// http://localhost:5000 => backend,frontend
-
+// Serve frontend in production
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static(path.join(__dirname, "/frontend/dist")));
-
-	// react app
 	app.get("*", (req, res) => {
 		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
 	});
