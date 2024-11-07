@@ -15,7 +15,6 @@ dotenv.config();
 connectDB();
 job.start();
 
-const PORT = process.env.PORT || 5000;
 const __dirname = path.resolve();
 
 // Cloudinary config
@@ -50,4 +49,5 @@ if (process.env.NODE_ENV === "production") {
 	});
 }
 
-server.listen(PORT, () => console.log(`Server started at http://localhost:${PORT}`));
+// Remove server.listen from here
+// server.listen(PORT, () => console.log(`Server started at http://localhost:${PORT}`));
